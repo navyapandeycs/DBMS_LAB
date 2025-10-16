@@ -54,15 +54,40 @@ INSERT INTO Loan VALUES(5, 'SBI_Jantarmantar', 5000);
 select * from loan;
 
 select branch_name, assests/100000 as 'assests in lakhs' from branch;
+
 SELECT d.customername, ba.branch_name
 FROM depositer d
 JOIN BankAccount ba ON d.accno = ba.accno
 GROUP BY d.customername, ba.branch_name
 HAVING COUNT(*) >= 2;
-CREATE VIEW BranchLoanSum AS
-SELECT branch_name, SUM(amount) AS total_loan_amount
-FROM LOAN
+
+CREATE VIEW BranchLoanSum AS SELECT branch_name, SUM(amount) AS total_loan_amount FROM LOAN
 GROUP BY branch_name;
+select* from BranchLoanSum;
+
+SELECT DISTINCT c.customername FROM bankcustomer c
+JOIN depositer d ON c.customername = d.customername
+JOIN bankaccount a ON d.accno = a.accno
+JOIN branch b ON a.branch_name = b.branch_name
+WHERE c.customercity = 'Delhi';
+
+SELECT DISTINCT customername FROM loan
+WHERE customername NOT IN (SELECT customername FROM depositer);
+
+SELECT branch_name FROM branch
+WHERE assests > ALL (SELECT assests FROM branch WHERE branchcity = 'Bombay');
+
+UPDATE bankaccount SET balance = balance * 1.05;
+
+DELETE FROM bankaccount WHERE branch_name IN (SELECT branch_name FROM branch
+    WHERE branchcity = 'Bombay');
+
+
+
+
+
+
+
 
 
 
